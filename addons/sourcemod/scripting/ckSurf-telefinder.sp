@@ -8,7 +8,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
-#include <surftimer>
+#include <ig_surf/surftimer>
 
 EngineVersion g_Game;
 

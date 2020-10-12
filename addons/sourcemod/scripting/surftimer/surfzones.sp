@@ -166,7 +166,7 @@ public Action StartTouchTrigger(int caller, int activator)
 
 	int iZoneType = g_mapZones[id].zoneType;
 	int iZoneTypeId = g_mapZones[id].zoneTypeId;
-	int iZoneGroup = g_mapZones[id].zoneGroup;
+	int iZoneGroup = g_mapZones[id].ZoneGroup;
 
 	if (g_bUsingStageTeleport[activator])
 		g_bUsingStageTeleport[activator] = false;
@@ -433,7 +433,7 @@ public Action EndTouchTrigger(int caller, int activator)
 
 	int iZoneType = g_mapZones[id].zoneType;
 	//int iZoneTypeId = g_mapZones[id].zoneTypeId;
-	int iZoneGroup = g_mapZones[id].zoneGroup;
+	int iZoneGroup = g_mapZones[id].ZoneGroup;
 
 	if (iZoneType == ZONETYPE_ANTIJUMP)
 	{
@@ -643,7 +643,7 @@ public void InitZoneVariables()
 		g_mapZones[i].PointB[2] = -1.0;
 		g_mapZones[i].zoneType = -1;
 		g_mapZones[i].zoneTypeId = -1;
-		g_mapZones[i].zoneGroup = -1;
+		g_mapZones[i].ZoneGroup = -1;
 		g_mapZones[i].zoneName = "";
 	}
 }
@@ -881,7 +881,7 @@ public void listZonesInGroup(int client)
 		char listZoneName[256], ZoneId[64], Id[64];
 		for (int i = 0; i < g_mapZonesCount; ++i)
 		{
-			if (g_mapZones[i].zoneGroup == g_CurrentSelectedZoneGroup[client])
+			if (g_mapZones[i].ZoneGroup == g_CurrentSelectedZoneGroup[client])
 			{
 				Format(ZoneId, sizeof(ZoneId), "%s-%i", g_szZoneDefaultNames[g_mapZones[i].zoneType], g_mapZones[i].zoneTypeId);
 				IntToString(i, Id, sizeof(Id));
@@ -1371,7 +1371,7 @@ public void ListZones(int client, bool mapzones)
 		{
 			for (int i = 0; i < g_mapZonesCount; ++i)
 			{
-				if (g_mapZones[i].zoneGroup == 0 && 0 < g_mapZones[i].zoneType < 6)
+				if (g_mapZones[i].ZoneGroup == 0 && 0 < g_mapZones[i].zoneType < 6)
 				{
 					// Make stages match the stage number, rather than the ID, to make it more clear for the user
 					if (g_mapZones[i].zoneType == 3)
@@ -1389,7 +1389,7 @@ public void ListZones(int client, bool mapzones)
 		{
 			for (int i = 0; i < g_mapZonesCount; ++i)
 			{
-				if (g_mapZones[i].zoneGroup == 0 && (g_mapZones[i].zoneType == 0 || g_mapZones[i].zoneType > 5))
+				if (g_mapZones[i].ZoneGroup == 0 && (g_mapZones[i].zoneType == 0 || g_mapZones[i].zoneType > 5))
 				{
 					Format(ZoneId, sizeof(ZoneId), "%s-%i", g_szZoneDefaultNames[g_mapZones[i].zoneType], g_mapZones[i].zoneTypeId);
 					IntToString(i, Id, sizeof(Id));
@@ -2040,7 +2040,7 @@ void resetZone(int zoneIndex)
 	g_mapZones[zoneIndex].zoneType = -1;
 	g_mapZones[zoneIndex].zoneTypeId = -1;
 	g_mapZones[zoneIndex].zoneName = "";
-	g_mapZones[zoneIndex].zoneGroup = 0;
+	g_mapZones[zoneIndex].ZoneGroup = 0;
 }
 
 public void getZoneDisplayColor(int type, int zColor[4], int zGrp)

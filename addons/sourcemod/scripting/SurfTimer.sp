@@ -158,18 +158,18 @@ enum UserJumps
 	LastJumpTimes[4],
 }
 
-enum FrameInfo
+enum struct FrameInfo
 {
-	playerButtons = 0,
-	playerImpulse,
-	Float:actualVelocity[3],
-	Float:predictedVelocity[3],
-	Float:predictedAngles[2],
-	CSWeaponID:newWeapon,
-	playerSubtype,
-	playerSeed,
-	additionalFields,
-	pause,
+	int PlayerButtons;
+	int PlayerImpulse;
+	float ActualVelocity[3];
+	float PredictedVelocity[3];
+	float PredictedAngles[2];
+	CSWeaponID NewWeapon;
+	int PlayerSubtype;
+	int PlayerSeed;
+	int AdditionalFields;
+	int Pause;
 }
 
 enum struct AdditionalTeleport
@@ -188,16 +188,16 @@ enum struct AdditionalTeleport
 // 	atFlags
 // }
 
-enum FileHeader
+enum struct FileHeader
 {
-	FH_binaryFormatVersion = 0,
-	String:FH_Time[32],
-	String:FH_Playername[32],
-	FH_Checkpoints,
-	FH_tickCount,
-	Float:FH_initialPosition[3],
-	Float:FH_initialAngles[3],
-	Handle:FH_frames
+	int BinaryFormatVersion;
+	char Time[32];
+	char Playername[32];
+	int Checkpoints;
+	int TickCount;
+	float InitialPosition[3];
+	float InitialAngles[3];
+	Handle Frames;
 }
 
 enum struct MapZone
@@ -213,7 +213,7 @@ enum struct MapZone
 	char targetName[128];
 	int oneJumpLimit;
 	float preSpeed;
-	int zoneGroup;
+	int ZoneGroup;
 
 	void Defaults()
 	{
@@ -229,24 +229,26 @@ enum struct MapZone
 		this.zoneTypeId = -1;
 		this.zoneName = "";
 		this.hookName = "";
-		this.zoneGroup = 0;
+		this.ZoneGroup = 0;
 		this.targetName = "";
 		this.oneJumpLimit = 1;
 		this.preSpeed = 250.0;
 	}
 }
 
-enum SkillGroup
+
+
+enum struct SkillGroup
 {
-	PointsBot,
-	PointsTop,
-	PointReq,
-	RankBot,
-	RankTop,
-	RankReq,
-	String:RankName[128],
-	String:RankNameColored[128],
-	String:NameColour[32]
+	int PointsBot;
+	int PointsTop;
+	int PointReq;
+	int RankBot;
+	int RankTop;
+	int RankReq;
+	char RankName[128];
+	char RankNameColored[128];
+	char NameColour[32];
 }
 
 #include <ig_surf/ig_core>
@@ -287,7 +289,7 @@ enum SkillGroup
 public Plugin myinfo =
 {
 	name = "SurfTimer",
-	author = "fluffys",
+	author = "fluffys, sonicSNES, ace, derwangler",
 	description = "A fork of ckSurf",
 	version = VERSION,
 	url = ""

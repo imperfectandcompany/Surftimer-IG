@@ -38,7 +38,7 @@ public Action ThrottledBeamBoxAll(Handle timer, int i)
 
 	bool drawForEveryone = false;
 	int iZoneType = g_mapZones[i].zoneType;
-	int iZoneGroup = g_mapZones[i].zoneGroup;
+	int iZoneGroup = g_mapZones[i].ZoneGroup;
 
 	switch(iZoneType)
 	{

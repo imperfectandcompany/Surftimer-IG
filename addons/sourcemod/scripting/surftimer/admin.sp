@@ -44,7 +44,7 @@ public void OnAdminMenuReady(Handle topmenu)
 public int TopMenuHandler2(Handle topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
 {
 	if (action == TopMenuAction_DisplayOption)
-		Format(buffer, maxlength, "SurfTimer");
+		Format(buffer, maxlength, "Imperfect Gamers");
 
 	else
 		if (action == TopMenuAction_SelectOption)

@@ -103,12 +103,13 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 		SetConVarInt(g_szEnablePlayerRecording, 0); 
 
 		// stop recording for all players if player limit exceeds
-		(for new i = 1; i <= MaxClients; i++) {
+		
+		for (int i = 1; i <= MaxClients; i++)
 		    if (IsClientInGame(i) && (!IsFakeClient(i)) && IsPlayerAlive(i))
 		    {
 		        StopRecording(i);
-		    }
-		} 
+		}
+	 
 	// hysteresis (player record limit > player count + 5) to prevent cvar spam
 	} else if (GetConVarInt(g_szPlayerRecordLimit) > (GetClientCount(true) + 5)) {
 		// reenable player recording if player count is 5 players lower then actual limit
@@ -388,7 +389,7 @@ public Action Say_Hook(int client, const char[] command, int argc)
 				if (StrEqual(sText, "reset"))
 					Format(sText, sizeof(sText), "player");
 
-				Format(g_mapZones[g_ClientSelectedZone[client]].targetName, sizeof(g_mapZones), "%s", sText);
+				Format(g_mapZones[g_ClientSelectedZone[client]].targetName, sizeof(MapZone::targetName), "%s", sText);
 
 				CPrintToChat(client, "%t", "Hooks5", g_szChatPrefix, g_szZoneDefaultNames[g_CurrentZoneType[client]], g_mapZones[g_ClientSelectedZone[client]].zoneTypeId, sText);
 

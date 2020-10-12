@@ -488,7 +488,7 @@ int g_iSideHudModule[MAXPLAYERS + 1][5];
 int g_iTeleSide[MAXPLAYERS + 1];
 
 //auto reset
-bool g_iAutoReset[MAXPLAYER + 1];
+bool g_iAutoReset[MAXPLAYERS + 1];
 
 /*----------  Run Variables  ----------*/
 

@@ -85,7 +85,7 @@ public void SQL_selectMapZonesCallback(Handle owner, Handle hndl, const char[] e
 			g_mapZones[g_mapZonesCount].PointB[0] = SQL_FetchFloat(hndl, 6);
 			g_mapZones[g_mapZonesCount].PointB[1] = SQL_FetchFloat(hndl, 7);
 			g_mapZones[g_mapZonesCount].PointB[2] = SQL_FetchFloat(hndl, 8);
-			g_mapZones[g_mapZonesCount].zoneGroup = SQL_FetchInt(hndl, 11);
+			g_mapZones[g_mapZonesCount].ZoneGroup = SQL_FetchInt(hndl, 11);
 
 			// Total amount of checkpoints
 			if (g_mapZones[g_mapZonesCount].zoneType == 4)
@@ -100,16 +100,16 @@ public void SQL_selectMapZonesCallback(Handle owner, Handle hndl, const char[] e
 			* Duplicate zoneids not possible due to primary key
 			*/
 			zoneIdChecker[g_mapZones[g_mapZonesCount].zoneId]++;
-			if (zoneGroupChecker[g_mapZones[g_mapZonesCount].zoneGroup] != 1)
+			if (zoneGroupChecker[g_mapZones[g_mapZonesCount].ZoneGroup] != 1)
 			{
 				// 1 = No Bonus, 2 = Bonus, >2 = Multiple bonuses
 				g_mapZoneGroupCount++;
-				zoneGroupChecker[g_mapZones[g_mapZonesCount].zoneGroup] = 1;
+				zoneGroupChecker[g_mapZones[g_mapZonesCount].ZoneGroup] = 1;
 			}
 
 			// You can have the same zonetype and zonetypeid values in different zonegroups
-			zoneTypeIdChecker[g_mapZones[g_mapZonesCount].zoneGroup][g_mapZones[g_mapZonesCount].zoneType][g_mapZones[g_mapZonesCount].zoneTypeId]++;
-			zoneTypeIdCheckerCount[g_mapZones[g_mapZonesCount].zoneGroup][g_mapZones[g_mapZonesCount].zoneType]++;
+			zoneTypeIdChecker[g_mapZones[g_mapZonesCount].ZoneGroup][g_mapZones[g_mapZonesCount].zoneType][g_mapZones[g_mapZonesCount].zoneTypeId]++;
+			zoneTypeIdCheckerCount[g_mapZones[g_mapZonesCount].ZoneGroup][g_mapZones[g_mapZonesCount].zoneType]++;
 
 			SQL_FetchString(hndl, 12, g_mapZones[g_mapZonesCount].zoneName, 128);
 			SQL_FetchString(hndl, 13, g_mapZones[g_mapZonesCount].hookName, 128);
@@ -125,11 +125,11 @@ public void SQL_selectMapZonesCallback(Handle owner, Handle hndl, const char[] e
 
 					case 1:
 					{
-						if (g_mapZones[g_mapZonesCount].zoneGroup > 0)
+						if (g_mapZones[g_mapZonesCount].ZoneGroup > 0)
 						{
 							g_bhasBonus = true;
 							Format(g_mapZones[g_mapZonesCount].zoneName, 128, "BonusStart-%i", g_mapZones[g_mapZonesCount].zoneTypeId);
-							Format(g_szZoneGroupName[g_mapZones[g_mapZonesCount].zoneGroup], 128, "Bonus %i", g_mapZones[g_mapZonesCount].zoneGroup);
+							Format(g_szZoneGroupName[g_mapZones[g_mapZonesCount].ZoneGroup], 128, "Bonus %i", g_mapZones[g_mapZonesCount].ZoneGroup);
 						}
 						else
 							Format(g_mapZones[g_mapZonesCount].zoneName, 128, "Start-%i", g_mapZones[g_mapZonesCount].zoneTypeId);
@@ -137,7 +137,7 @@ public void SQL_selectMapZonesCallback(Handle owner, Handle hndl, const char[] e
 
 					case 2:
 					{
-						if (g_mapZones[g_mapZonesCount].zoneGroup > 0)
+						if (g_mapZones[g_mapZonesCount].ZoneGroup > 0)
 							Format(g_mapZones[g_mapZonesCount].zoneName, 128, "BonusEnd-%i", g_mapZones[g_mapZonesCount].zoneTypeId);
 						else
 							Format(g_mapZones[g_mapZonesCount].zoneName, 128, "End-%i", g_mapZones[g_mapZonesCount].zoneTypeId);
@@ -165,9 +165,9 @@ public void SQL_selectMapZonesCallback(Handle owner, Handle hndl, const char[] e
 				{
 					case 1:
 					{
-						if (g_mapZones[g_mapZonesCount].zoneGroup > 0)
+						if (g_mapZones[g_mapZonesCount].ZoneGroup > 0)
 							g_bhasBonus = true;
-						Format(g_szZoneGroupName[g_mapZones[g_mapZonesCount].zoneGroup], 128, "%s", g_mapZones[g_mapZonesCount].zoneName);
+						Format(g_szZoneGroupName[g_mapZones[g_mapZonesCount].ZoneGroup], 128, "%s", g_mapZones[g_mapZonesCount].zoneName);
 					}
 
 					case 3: g_bhasStages = true;
@@ -193,7 +193,7 @@ public void SQL_selectMapZonesCallback(Handle owner, Handle hndl, const char[] e
 			}
 
 			// Zone counts:
-			g_mapZonesTypeCount[g_mapZones[g_mapZonesCount].zoneGroup][g_mapZones[g_mapZonesCount].zoneType]++;
+			g_mapZonesTypeCount[g_mapZones[g_mapZonesCount].ZoneGroup][g_mapZones[g_mapZonesCount].zoneType]++;
 			g_mapZonesCount++;
 		}
 		// Count zone corners
