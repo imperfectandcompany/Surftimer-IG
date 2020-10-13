@@ -180,7 +180,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 		else if (client == g_WrcpBot)
 			CS_SetClientClanTag(client, "WRCP Replay");
 
-		CS_SetClientContributionScore(client, -99999);
+		CS_SetClientContributionScore(client, -1337);
 
 		if (client == g_RecordBot || client == g_BonusBot || client == g_WrcpBot)
 		{

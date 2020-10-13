@@ -394,7 +394,7 @@ void SetClanTag(int client)
 			CPrintToChat(client, "%t", "SkillGroup", g_szChatPrefix, g_pr_chat_coloredrank[client]);
 
 		if (strlen(tag) <= 10)
-			Format(tag, sizeof(tag), "[%s]", tag);
+			Format(tag, sizeof(tag), "%s |", tag);
 
 		CS_SetClientClanTag(client, tag);
 	}
