@@ -16,7 +16,7 @@ public Action Server_Time(int client, int args)
     
 	ReplyToCommand(client, "Server time below is in PST/PDT.");
     ReplyToCommand(client, "%02d:%02d", iHour, iMinute);
-	ReplyToCommand(client, "We regularly restart at 12:00 AM, 6:00 AM, 12:00 AM and 6:00 PM in accordance to the server time above.", client);
+	ReplyToCommand(client, "We regularly restart at 12:00 AM, 6:00 AM, 12:00 AM and 6:00 PM in accordance to the server time above.");
 	
     }
 	else
