@@ -16,6 +16,7 @@
 #include <cstrike>
 #include <smlib>
 #include <geoip>
+#include <unixtime_sourcemod>
 #include <basecomm>
 #include <colorvariables>
 #undef REQUIRE_EXTENSIONS
@@ -284,6 +285,8 @@ enum struct SkillGroup
 #include "surftimer/cvote.sp"
 //#include "surftimer/func.sp"
 #include "surftimer/natives.sp"
+#include "surftimer/restartannouncer.sp"
+
 
 
 public Plugin myinfo =
@@ -583,6 +586,9 @@ public void OnConfigsExecuted()
 	g_hChatPrefix.GetString(g_szChatPrefix, sizeof(g_szChatPrefix));
 	g_hChatPrefix.GetString(g_szMenuPrefix, sizeof(g_szMenuPrefix));
 	CRemoveColors(g_szMenuPrefix, sizeof(g_szMenuPrefix));
+
+
+
 
 	// Count the amount of bonuses and then set skillgroups
 	SetSkillGroups();
@@ -1241,9 +1247,11 @@ public void OnPluginStart()
 
 	CreateConVars();
 	CreateCommands();
+	//after chat prefix is found, it loads the restartannouncer, prefix first for the titles
+
 	CreateHooks();
 	CreateCommandListeners();
-
+	RestartAnnouncer();
 	db_setupDatabase();
 
 	// exec surftimer.cfg
@@ -1318,6 +1326,7 @@ public void OnPluginStart()
 	g_bHasLatestID = false;
 	g_iLastID = 0;
 }
+
 
 public void OnAllPluginsLoaded()
 {

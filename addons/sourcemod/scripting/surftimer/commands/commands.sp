@@ -203,9 +203,6 @@ void CreateCommands()
 	RegAdminCmd("sm_deleterecords", Command_DeleteRecords, g_ZonerFlag, "[surftimer] [zoner] Delete records");
 	RegAdminCmd("sm_dr", Command_DeleteRecords, g_ZonerFlag, "[surftimer] [zoner] Delete records");
 
-#if defined DEBUG
-	CreateTestCommands();
-#endif
 }
 
 public Action Command_ToggleAutoReset(int client, int args) {

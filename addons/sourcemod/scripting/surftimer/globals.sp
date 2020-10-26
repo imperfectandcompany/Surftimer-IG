@@ -25,6 +25,11 @@ char g_szSpeedColour[MAXPLAYERS + 1];
 // Show Zones
 bool g_bShowZones[MAXPLAYERS + 1];
 
+
+
+
+
+
 /*----------  Stages  ----------*/
 
 // Which stage is the client in
