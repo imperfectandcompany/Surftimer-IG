@@ -655,9 +655,12 @@ public void OnPlayerThink(int entity)
 
 
 // OnRoundRestart
-public Action Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
+public Action Event_OnRoundStart(Handle event, const char[] name, bool dontBroadcast)
 {
 	int iEnt;
+	
+	db_viewMapSettings();
+	
 	for (int i = 0; i < sizeof(EntityList); i++)
 	{
 		while ((iEnt = FindEntityByClassname(iEnt, EntityList[i])) != -1)
@@ -685,11 +688,10 @@ public Action Event_OnRoundStart(Event event, const char[] name, bool dontBroadc
 
 	// Hook zones
 	iEnt = -1;
-	delete g_hTriggerMultiple;
-	g_hTriggerMultiple = new ArrayList(128);
+	g_hTriggerMultiple = CreateArray(128);
 	while ((iEnt = FindEntityByClassname(iEnt, "trigger_multiple")) != -1)
 	{
-		g_hTriggerMultiple.Push(iEnt);
+		PushArrayCell(g_hTriggerMultiple, iEnt);
 	}
 
 	// iEnt = -1;
@@ -716,7 +718,6 @@ public Action OnTouchAllTriggers(int entity, int other)
 {
 	if (other >= 1 && other <= MaxClients && IsFakeClient(other))
 		return Plugin_Handled;
-		
 	return Plugin_Continue;
 }
 

@@ -1064,6 +1064,7 @@ bool g_bNewStage[MAXPLAYERS + 1];
 bool g_bLeftZone[MAXPLAYERS + 1];
 
 
+
 /*===================================
 =         Predefined Arrays         =
 ===================================*/

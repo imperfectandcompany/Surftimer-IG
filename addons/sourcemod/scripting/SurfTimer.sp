@@ -154,11 +154,6 @@
 =            Enumerations            =
 ====================================*/
 
-enum UserJumps
-{
-	LastJumpTimes[4],
-}
-
 enum struct FrameInfo
 {
 	int PlayerButtons;
@@ -180,14 +175,6 @@ enum struct AdditionalTeleport
 	float AtVelocity[3];
 	int AtFlags;
 }
-
-// enum AdditionalTeleport
-// {
-// 	Float:atOrigin[3],
-// 	Float:atAngles[3],
-// 	Float:atVelocity[3],
-// 	atFlags
-// }
 
 enum struct FileHeader
 {
@@ -215,6 +202,8 @@ enum struct MapZone
 	int oneJumpLimit;
 	float preSpeed;
 	int ZoneGroup;
+	int Vis;
+	int Team;	
 
 	void Defaults()
 	{
@@ -286,6 +275,7 @@ enum struct SkillGroup
 //#include "surftimer/func.sp"
 #include "surftimer/natives.sp"
 #include "surftimer/restartannouncer.sp"
+
 
 
 
@@ -371,7 +361,7 @@ public void OnPluginEnd()
 
 
 	// set server convars back to default
-	ServerCommand("sm_cvar sv_enablebunnyhopping 0;sv_friction 5.2;sv_accelerate 5.5;sv_airaccelerate 10;sv_maxvelocity 2000;sv_staminajumpcost .08;sv_staminalandcost .050");
+	ServerCommand("sm_cvar sv_enablebunnyhopping 0;sv_friction 5.2;sv_accelerate 5.5;sv_airaccelerate 1000;sv_maxvelocity 2000;sv_staminajumpcost .08;sv_staminalandcost .050");
 	ServerCommand("mp_respawnwavetime_ct 10.0;mp_respawnwavetime_t 10.0;bot_zombie 0;mp_ignore_round_win_conditions 0"); // mp_respawn_on_death_ct 0;mp_respawn_on_death_t 0
 	ServerCommand("sv_infinite_ammo 0;mp_endmatch_votenextmap 1;mp_do_warmup_period 1;mp_warmuptime 60;mp_match_can_clinch 1;mp_match_end_changelevel 0");
 	ServerCommand("mp_match_restart_delay 15;mp_endmatch_votenextleveltime 20;mp_endmatch_votenextmap 1;mp_halftime 0;mp_do_warmup_period 1;mp_maxrounds 0;bot_quota 0");
@@ -418,6 +408,8 @@ public void OnMapStart()
 
 	// Load spawns
 	checkSpawnPoints();
+	
+	db_viewMapSettings();	
 
 	LoadMapStart();
 
@@ -444,10 +436,10 @@ public void OnMapStart()
 	SetCashState();
 
 	// Timers
-	CreateTimer(0.1, CKTimer1, _, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
-	CreateTimer(1.0, CKTimer2, _, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
-	CreateTimer(60.0, AttackTimer, _, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
-	CreateTimer(600.0, PlayerRanksTimer, _, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
+	CreateTimer(0.1, CKTimer1, INVALID_HANDLE, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
+	CreateTimer(1.0, CKTimer2, INVALID_HANDLE, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
+	CreateTimer(60.0, AttackTimer, INVALID_HANDLE, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
+	CreateTimer(600.0, PlayerRanksTimer, INVALID_HANDLE, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
 	CreateTimer(ZONE_REFRESH_TIME, BeamBoxAll, _, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
 
 	// AutoBhop
@@ -560,9 +552,17 @@ public void OnMapEnd()
 	g_WrcpBot = -1;
 	db_Cleanup();
 
-	delete g_hSkillGroups;
-	delete g_hBotTrail[0];
-	delete g_hBotTrail[1];
+	if (g_hSkillGroups != null)
+		CloseHandle(g_hSkillGroups);
+	g_hSkillGroups = null;
+
+	if (g_hBotTrail[0] != null)
+		CloseHandle(g_hBotTrail[0]);
+	g_hBotTrail[0] = null;
+
+	if (g_hBotTrail[1] != null)
+		CloseHandle(g_hBotTrail[1]);
+	g_hBotTrail[1] = null;
 
 	Format(g_szMapName, sizeof(g_szMapName), "");
 
@@ -574,11 +574,23 @@ public void OnMapEnd()
 	}
 
 	// Hook Zones
-	delete g_hTriggerMultiple;
-	delete g_hDestinations;
+	if (g_hTriggerMultiple != null)
+	{
+		ClearArray(g_hTriggerMultiple);
+		CloseHandle(g_hTriggerMultiple);
+	}
 
-	// 	delete g_hStore;
+	g_hTriggerMultiple = null;
+	delete g_hTriggerMultiple;
+
+	CloseHandle(g_mTriggerMultipleMenu);
+
+	if (g_hDestinations != null)
+		CloseHandle(g_hDestinations);
+
+	g_hDestinations = null;
 }
+
 
 public void OnConfigsExecuted()
 {
@@ -676,7 +688,7 @@ public void OnClientPutInServer(int client)
 
 	if (IsFakeClient(client))
 	{
-		g_hRecordingAdditionalTeleport[client] = new ArrayList(sizeof(AdditionalTeleport));
+		g_hRecordingAdditionalTeleport[client] = CreateArray(sizeof(AdditionalTeleport));
 		CS_SetMVPCount(client, 1);
 		return;
 	}
@@ -1330,7 +1342,6 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-	// Check if store is running
 	// g_hStore = FindPluginByFile("store.smx");
 }
 

@@ -2159,7 +2159,7 @@ public void SetSkillGroups()
 
 
 			if (g_hSkillGroups == null)
-				g_hSkillGroups = CreateArray(sizeof(RankValue));
+				g_hSkillGroups = CreateArray(sizeof(SkillGroup));
 			else
 				ClearArray(g_hSkillGroups);
 
