@@ -23,8 +23,8 @@ public void db_setupDatabase()
 
 	if (strcmp(szIdent, "mysql", false) == 0)
 	{
-		// https://github.com/nikooo777/ckSurf/pull/58
-		//SQL_FastQuery(g_hDb, "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+		//https://github.com/nikooo777/ckSurf/pull/58
+		SQL_FastQuery(g_hDb, "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
 		g_DbType = MYSQL;
 	}
 	else if (strcmp(szIdent, "sqlite", false) == 0)
@@ -592,7 +592,7 @@ public void sql_CountFinishedBonusCallback(Handle owner, Handle hndl, const char
 	int style = ReadPackCell(pack);
 
 	char szMap[128], szSteamId[32];
-	int totalPlayers;
+	//int totalplayers;
 	int rank;
 
 	getSteamIDFromClient(client, szSteamId, 32);
@@ -605,11 +605,12 @@ public void sql_CountFinishedBonusCallback(Handle owner, Handle hndl, const char
 		{
 			finishedbonuses++;
 			rank = SQL_FetchInt(hndl, 1);
-			totalPlayers = SQL_FetchInt(hndl, 2);
-			SQL_FetchString(hndl, 0, szMap, sizeof(szMap));
+			SQL_FetchString(hndl, 0, szMap, 128);
+
 
 			int points = 0;
-
+			for (int i = 0; i < GetArraySize(g_MapList); i++) // Check that the map is in the mapcycle
+			{
 			switch (rank)
 			{
 				case 1:
@@ -640,12 +641,13 @@ public void sql_CountFinishedBonusCallback(Handle owner, Handle hndl, const char
 				case 20: points = 10;
 				default: points = 5;
 			}
-
+			
 			if (rank != 1)
 			{
 				g_pr_points[client][style] += points;
 				g_Points[client][style][1] += points;
 			}
+}
 
 			/* IG REWEIGHTED POINTS - Not using this right now, but leave it here if we ever want to rebalance things. */
 			// switch (rank)
@@ -772,7 +774,7 @@ public void sql_CountFinishedMapsCallback(Handle owner, Handle hndl, const char[
 	int style = ReadPackCell(pack);
 	delete pack;
 
-	bool isAngleSurf = (style == STYLE_HSW || style == STYLE_SW || style == STYLE_BW || style == STYLE_WONLY) ? true : false;
+	//part of ig point reweight, which is not in use. bool isAngleSurf = (style == STYLE_HSW || style == STYLE_SW || style == STYLE_BW || style == STYLE_WONLY) ? true : false;
 
 	char szMap[128];
 	int finishedMaps = 0, totalplayers, rank, tier, wrs;

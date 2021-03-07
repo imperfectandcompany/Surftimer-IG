@@ -42,6 +42,8 @@
 #define MAX_TITLE_LENGTH 128
 #define MAX_TITLES 32
 #define MAX_RAWTITLE_LENGTH 1024
+//CSGO HUD Hint Fix
+#define MAX_HINT_SIZE 225
 
 // Require New Syntax & Semicolons
 #pragma newdecls required
@@ -361,7 +363,7 @@ public void OnPluginEnd()
 
 
 	// set server convars back to default
-	ServerCommand("sm_cvar sv_enablebunnyhopping 0;sv_friction 5.2;sv_accelerate 5.5;sv_airaccelerate 1000;sv_maxvelocity 2000;sv_staminajumpcost .08;sv_staminalandcost .050");
+	ServerCommand("sm_cvar sv_enablebunnyhopping 0;sv_friction 5.2;sv_accelerate 10;sv_airaccelerate 1000;sv_maxvelocity 2000;sv_staminajumpcost .08;sv_staminalandcost .050");
 	ServerCommand("mp_respawnwavetime_ct 10.0;mp_respawnwavetime_t 10.0;bot_zombie 0;mp_ignore_round_win_conditions 0"); // mp_respawn_on_death_ct 0;mp_respawn_on_death_t 0
 	ServerCommand("sv_infinite_ammo 0;mp_endmatch_votenextmap 1;mp_do_warmup_period 1;mp_warmuptime 60;mp_match_can_clinch 1;mp_match_end_changelevel 0");
 	ServerCommand("mp_match_restart_delay 15;mp_endmatch_votenextleveltime 20;mp_endmatch_votenextmap 1;mp_halftime 0;mp_do_warmup_period 1;mp_maxrounds 0;bot_quota 0");
@@ -1268,6 +1270,12 @@ public void OnPluginStart()
 
 	// exec surftimer.cfg
 	AutoExecConfig(true, "surftimer");
+	
+	// mapcycle array
+	int arraySize = ByteCountToCells(PLATFORM_MAX_PATH);
+	g_MapList = CreateArray(arraySize);	
+
+
 
 	// mic
 	g_ownerOffset = FindSendPropInfo("CBaseCombatWeapon", "m_hOwnerEntity");

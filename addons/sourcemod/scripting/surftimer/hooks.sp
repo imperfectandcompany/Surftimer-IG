@@ -1498,12 +1498,11 @@ public Action Event_PlayerJump(Event event, char[] name, bool dontBroadcast)
 			//}
 
 			g_iTicksOnGround[client] = 0;
-			int time = GetTime();
-			int cTime = time - g_iLastJump[client];
+			float time = GetGameTime();
+			float cTime = time - g_iLastJump[client];
 			int style = g_players[client].currentStyle;
 
-			//float time = GetGameTime();
-			//float cTime = time - g_iLastJump[client];
+
 
 			// slomo and lg workaround
 			if (style == 4 || style == 5)
@@ -1513,14 +1512,16 @@ public Action Event_PlayerJump(Event event, char[] name, bool dontBroadcast)
 			{
 				if (g_bFirstJump[client])
 				{
-					if (cTime > 1)
+					if (cTime > 0.8)
 					{
-						g_bFirstJump[client] = false;
+						g_bFirstJump[client] = true;
+						g_iLastJump[client] = GetGameTime();						
 						//if (IsPlayerZoner(client))
 						//	CPrintToChat(client, "1: g_bFirstJump = false");
 					}
 					else
 					{
+						g_iLastJump[client] = GetGameTime();					
 						g_bInBhop[client] = true;
 						//if (IsPlayerZoner(client))
 						//	CPrintToChat(client, "2: g_bInBhop = true");
@@ -1528,6 +1529,7 @@ public Action Event_PlayerJump(Event event, char[] name, bool dontBroadcast)
 				}
 				else
 				{
+					g_iLastJump[client] = GetGameTime();
 					g_bFirstJump[client] = true;
 					//if (IsPlayerZoner(client))
 					//	CPrintToChat(client, "3: g_bFirstJump = true");
@@ -1536,12 +1538,12 @@ public Action Event_PlayerJump(Event event, char[] name, bool dontBroadcast)
 			else if (cTime > 1)
 			{
 				g_bInBhop[client] = false;
+				g_iLastJump[client] = GetGameTime();				
 				//if (IsPlayerZoner(client))
 				//	CPrintToChat(client, "4: g_bInBhop = false");
 			}
-
-			g_iLastJump[client] = GetTime();
-		}
+			g_iLastJump[client] = GetGameTime();
+			}
 		else if (g_hOneJumpLimit.BoolValue) // cksurf method
 		{
 			if (g_bInStartZone[client] || g_bInStageZone[client])

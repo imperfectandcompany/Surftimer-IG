@@ -946,7 +946,9 @@ public void MovementCheck(int client)
 
 public void PlayButtonSound(int client)
 {
-	if (!g_hSoundEnabled.BoolValue)
+	if (!GetConVarBool(g_hSoundEnabled))
+		return;
+	if (!g_bEnableQuakeSounds[client])
 		return;
 
 	// Players button sound
@@ -3011,8 +3013,8 @@ public void CenterHudDead(int client)
 					Format(obsAika, sizeof(obsAika), "<font color='#FFFF00'>%s</font>", g_szBonusTime);
 				else if (ObservedUser == g_WrcpBot)
 					Format(obsAika, sizeof(obsAika), "<font color='#FFFF00'>%s</font>", g_szWrcpReplayTime[g_iCurrentlyPlayingStage]);
-
-				PrintHintText(client, "<pre><font face=''>%s\nSpeed: <font color='#66bbff'>%i</font> u/s\nKeys: %s</pre>", obsAika, RoundToNearest(g_fLastSpeed[ObservedUser]), sResult);
+					
+				PrintCSGOHUDText(client, "<pre><font face=''>%s\nSpeed: <font color='#66bbff'>%i</font> u/s\nKeys: %s</pre>", obsAika, RoundToNearest(g_fLastSpeed[ObservedUser]), sResult);
 				return;
 			}
 			else if (g_bTimerRunning[ObservedUser])
@@ -3039,7 +3041,7 @@ public void CenterHudDead(int client)
 				Format(timerText, 32, "%s ", g_players[ObservedUser].styleTextSmall);
 				// fluffys come back here
 
-			PrintHintText(client, "<pre><font face=''>%s <font color='#00ff00'>%s</font>\nSpeed: <font color='#66bbff'>%i</font> u/s\nKeys: %s</pre>", timerText, obsAika, RoundToNearest(g_fLastSpeed[ObservedUser]), sResult);
+			PrintCSGOHUDText(client, "<pre><font face=''>%s <font color='#00ff00'>%s</font>\nSpeed: <font color='#66bbff'>%i</font> u/s\nKeys: %s</pre>", timerText, obsAika, RoundToNearest(g_fLastSpeed[ObservedUser]), sResult);
 		}
 	}
 	else
@@ -3054,32 +3056,32 @@ public void CenterHudAlive(int client)
 	MapLoadState mapState = GetMapLoadState();
 	if (mapState == MLS_LOADING)
 	{
-		PrintHintText(client, "<font color='#FFFF00'>Loading map ... %i/%i</font>", GetMapLoadStep(), MAX_MAP_LOAD_STEPS);
+		PrintCSGOHUDText(client, "<font color='#FFFF00'>Loading map ... %i/%i</font>", GetMapLoadStep(), MAX_MAP_LOAD_STEPS);
 		return;
 	}
 
 	if (mapState != MLS_LOADED)
 	{
-		PrintHintText(client, "<font color='#FFFF00'>Map Load Error %i/%i</font>", GetMapLoadStep(), MAX_MAP_LOAD_STEPS);
+		PrintCSGOHUDText(client, "<font color='#FFFF00'>Map Load Error %i/%i</font>", GetMapLoadStep(), MAX_MAP_LOAD_STEPS);
 		return;
 	}
 
 	PlayerLoadState playerState = GetPlayerLoadState(client);
 	if (playerState == PLS_PENDING)
 	{
-		PrintHintText(client, "<font color='#FFFF00'>Waiting in account queue ...</font>");
+		PrintCSGOHUDText(client, "<font color='#FFFF00'>Waiting in account queue ...</font>");
 		return;
 	}
 
 	if (playerState == PLS_LOADING)
 	{
-		PrintHintText(client, "<font color='#FFFF00'>Loading your account ... %i/%i</font>", GetPlayerLoadStep(client), MAX_LOAD_STEPS);
+		PrintCSGOHUDText(client, "<font color='#FFFF00'>Loading your account ... %i/%i</font>", GetPlayerLoadStep(client), MAX_LOAD_STEPS);
 		return;
 	}
 
 	if (playerState != PLS_LOADED)
 	{
-		PrintHintText(client, "<font color='#FFFF00'>Account Load Error %i/%i</font>", GetPlayerLoadStep(client), MAX_LOAD_STEPS);
+		PrintCSGOHUDText(client, "<font color='#FFFF00'>Account Load Error %i/%i</font>", GetPlayerLoadStep(client), MAX_LOAD_STEPS);
 		return;
 	}
 
@@ -3337,7 +3339,7 @@ public void CenterHudAlive(int client)
 		// 	Format(timerText, sizeof(timerText), "%s", timerColour);
 
 		// PrintHintText(client, "<font face=''>%s%s\n%s%s\n%s%s</font>", module[0], module2, module[2], module4, module[4], module6);
-		PrintHintText(client, "<pre><font face='' class='fontSize-sm'>%15s\t %15s\n%15s\t %15s\n%15s\t %15s</font></pre>", module[0], module[1], module[2], module[3], module[4], module[5]);
+		PrintCSGOHUDText(client, "<pre><font face='' class='fontSize-sm'>%15s\t %15s\n%15s\t %15s\n%15s\t %15s</font></pre>", module[0], module[1], module[2], module[3], module[4], module[5]);
 	}
 }
 
@@ -4378,6 +4380,27 @@ public bool IsPlayerTimerAdmin(int client)
 public Action ThrottledConsolePrint(DataPack pack)
 {
 	ThrottledConsolePrint2(INVALID_HANDLE, pack);
+}
+
+void PrintCSGOHUDText(int client, const char[] format, any ...)
+{
+	char buff[MAX_HINT_SIZE];
+	VFormat(buff, sizeof(buff), format, 3);
+	Format(buff, sizeof(buff), "</font>%s ", buff);
+
+	for(int i = strlen(buff); i < sizeof(buff); i++)
+		buff[i] = '\n';
+
+	Protobuf pb = view_as<Protobuf>(StartMessageOne("TextMsg", client, USERMSG_RELIABLE | USERMSG_BLOCKHOOKS));
+	pb.SetInt("msg_dst", 4);
+	pb.AddString("params", "#SFUI_ContractKillStart");
+	pb.AddString("params", buff);
+	pb.AddString("params", NULL_STRING);
+	pb.AddString("params", NULL_STRING);
+	pb.AddString("params", NULL_STRING);
+	pb.AddString("params", NULL_STRING);
+
+	EndMessage();
 }
 
 public Action ThrottledConsolePrint2(Handle timer, DataPack pack)

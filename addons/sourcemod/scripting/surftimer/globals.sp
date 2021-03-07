@@ -683,6 +683,9 @@ int g_iCurrentlyPlayingStage;
 
 /*----------  Misc  ----------*/
 
+// Used to load the mapcycle
+Handle g_MapList = null;
+
 // Used to check if a player just joined the server
 float g_fMapStartTime;
 
@@ -932,6 +935,8 @@ ConVar g_cvar_sv_hibernate_when_empty = null;
 bool g_bJumpedInZone[MAXPLAYERS + 1];
 float g_fJumpedInZoneTime[MAXPLAYERS + 1];
 bool g_bResetOneJump[MAXPLAYERS + 1];
+	
+
 
 // Stage replays
 
@@ -1058,7 +1063,7 @@ char g_szMapNameFromDatabase[MAXPLAYERS + 1][128];
 // New speed limit variables
 bool g_bInBhop[MAXPLAYERS + 1];
 bool g_bFirstJump[MAXPLAYERS + 1];
-int g_iLastJump[MAXPLAYERS + 1];
+float g_iLastJump[MAXPLAYERS + 1];
 int g_iTicksOnGround[MAXPLAYERS + 1];
 bool g_bNewStage[MAXPLAYERS + 1];
 bool g_bLeftZone[MAXPLAYERS + 1];
@@ -1190,6 +1195,7 @@ char EntityList[][] = 													// Disable entities that often break maps
 	"logic_timer",
 	"team_round_timer",
 	"logic_relay",
+	"player_weapon_strip",	
 	"player_weaponstrip",
 	"trigger_weapon_strip",
 	"game_player_equip"
@@ -1199,5 +1205,6 @@ char RadioCMDS[][] = 													// Disable radio commands
 {
 	"coverme", "takepoint", "holdpos", "regroup", "followme", "takingfire", "go", "fallback", "sticktog",
 	"getinpos", "stormfront", "report", "roger", "enemyspot", "needbackup", "sectorclear", "inposition",
-	"reportingin", "getout", "negative", "enemydown", "cheer", "thanks", "nice", "compliment"
+	"reportingin", "getout", "negative", "enemydown", "cheer", "thanks", "nice", "compliment", "go_a",
+	"go_b", "sorry", "needrop"
 };

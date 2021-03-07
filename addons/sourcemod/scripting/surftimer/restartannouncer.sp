@@ -12,12 +12,10 @@ public Action Server_Time(int client, int args)
 	
 	if (client)
     {
-    UnixToTime(GetTime(), iYear, iMonth, iDay, iHour, iMinute, iSecond, UT_TIMEZONE_PST );
-    
+	UnixToTime(g_time, iYear, iMonth, iDay, iHour, iMinute, iSecond, UT_TIMEZONE_PST );
 	ReplyToCommand(client, "Server time below is in PST/PDT.");
-    ReplyToCommand(client, "%02d:%02d", iHour, iMinute);
+	ReplyToCommand(client, "%02d:%02d", iHour, iMinute);
 	ReplyToCommand(client, "We regularly restart at 12:00 AM, 6:00 AM, 12:00 AM and 6:00 PM in accordance to the server time above.");
-	
     }
 	else
 	{
@@ -25,7 +23,7 @@ public Action Server_Time(int client, int args)
     UnixToTime(GetTime(), iYear, iMonth, iDay, iHour, iMinute, iSecond, UT_TIMEZONE_PST );
     
     PrintToServer("%02d:%02d", iHour, iMinute);
-        PrintToServer("Command from server");
+    PrintToServer("Command from server");
     }
 	   
 	return Plugin_Handled;
