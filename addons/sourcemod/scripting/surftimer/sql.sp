@@ -592,7 +592,7 @@ public void sql_CountFinishedBonusCallback(Handle owner, Handle hndl, const char
 	int style = ReadPackCell(pack);
 
 	char szMap[128], szSteamId[32];
-	//int totalplayers;
+	int totalPlayers;
 	int rank;
 
 	getSteamIDFromClient(client, szSteamId, 32);
@@ -605,12 +605,11 @@ public void sql_CountFinishedBonusCallback(Handle owner, Handle hndl, const char
 		{
 			finishedbonuses++;
 			rank = SQL_FetchInt(hndl, 1);
-			SQL_FetchString(hndl, 0, szMap, 128);
+			totalPlayers = SQL_FetchInt(hndl, 2);
+			SQL_FetchString(hndl, 0, szMap, sizeof(szMap));
 
 
 			int points = 0;
-			for (int i = 0; i < GetArraySize(g_MapList); i++) // Check that the map is in the mapcycle
-			{
 			switch (rank)
 			{
 				case 1:
@@ -647,7 +646,6 @@ public void sql_CountFinishedBonusCallback(Handle owner, Handle hndl, const char
 				g_pr_points[client][style] += points;
 				g_Points[client][style][1] += points;
 			}
-}
 
 			/* IG REWEIGHTED POINTS - Not using this right now, but leave it here if we ever want to rebalance things. */
 			// switch (rank)
